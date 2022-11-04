@@ -1,4 +1,4 @@
-package com.example.application;
+package org.dbpedia.archivo;
 
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.page.AppShellConfigurator;
