@@ -2,6 +2,8 @@ package org.dbpedia.archivo.lookup;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -12,18 +14,25 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
-public final class LookupRequester {
+@Service
+public class LookupRequester {
 
-    private static final String lookup_endpoint = "http://tools.dbpedia.org:9274/lookup-application/api/search?query=%s";
+    private final String lookup_endpoint;
 
-    public static List<LookupObject> getResult(String query) throws Exception {
+    public LookupRequester(@Value("${ocs.lookup.uri}") String lookupBase) {
+        this.lookup_endpoint = lookupBase + "?query=%s";
+    }
+
+    public List<LookupObject> getResult(String query) throws Exception {
 
         Gson gson = new Gson();
 
+
         String encoded_query = URLEncoder.encode(query, StandardCharsets.UTF_8);
+
         HttpClient client = HttpClient.newHttpClient();
 
-        HttpRequest req = HttpRequest.newBuilder().uri(new URI(String.format(lookup_endpoint, encoded_query))).build();
+        HttpRequest req = HttpRequest.newBuilder().uri(new URI(String.format(this.lookup_endpoint, encoded_query))).build();
 
         HttpResponse<String> response = client.send(req, HttpResponse.BodyHandlers.ofString());
 

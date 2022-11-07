@@ -16,6 +16,7 @@ import org.dbpedia.archivo.lookup.LookupObject;
 import org.dbpedia.archivo.lookup.LookupRequester;
 import org.dbpedia.archivo.utils.MossUtilityFunctions;
 import org.dbpedia.archivo.views.main.MainView;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 import java.util.ArrayList;
@@ -27,15 +28,17 @@ import java.util.Map;
 @RouteAlias(value = "")
 @PageTitle("Search")
 //@CssImport("./views/about/about-view.css")
-public class OCSView extends Div implements BeforeEnterObserver {
+public class OCSView extends Div {
 
     List<LookupFrontendData> suggestions = new ArrayList<>();
     Grid<LookupFrontendData> suggestion_grid = new Grid<>();
 
     Div versionDiv = new Div();
 
+    LookupRequester lr;
 
-    public OCSView() {
+    public OCSView(@Autowired LookupRequester lookupRequester) {
+        this.lr = lookupRequester;
         addClassName("about-view");
 
         //Headline
@@ -89,20 +92,11 @@ public class OCSView extends Div implements BeforeEnterObserver {
         add(vl);
     }
 
-    @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        Location location = beforeEnterEvent.getLocation();
-        QueryParameters queryParameters = location.getQueryParameters();
-        Map<String, List<String>> parametersMap = queryParameters.getParameters();
-        List<String> defaultDatabusFiles = Collections.singletonList("https://databus.dbpedia.org/jj-author/mastr/bnetza-mastr/01.04.01/bnetza-mastr_rli_type=wind.nt.gz");
-        String databusFile = parametersMap.getOrDefault("dfid", defaultDatabusFiles).get(0);
-    }
-
     private void updateSuggestions(String query) {
         suggestions.clear();
         List<LookupObject> search_result;
         try {
-            search_result = LookupRequester.getResult(query);
+            search_result = lr.getResult(query);
         } catch (Exception e) {
             System.out.println("Exception:" + e);
             search_result = new ArrayList<>();
