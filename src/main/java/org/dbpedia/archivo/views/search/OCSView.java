@@ -42,7 +42,7 @@ public class OCSView extends Div {
         addClassName("about-view");
 
         //Headline
-        add(new H1("Search Ontologies"));
+        add(new H1("Search Ontologies and Terms"));
 
         suggestion_grid.setItems(suggestions);
         suggestion_grid.setWidth("50%");
@@ -56,7 +56,7 @@ public class OCSView extends Div {
         });
 
         search_field.setValueChangeMode(ValueChangeMode.LAZY);
-        search_field.setPlaceholder("Search for annotation terms (Classes and Properties)");
+        search_field.setPlaceholder("Search for terms (Classes and Properties) and Ontologies");
         search_field.setMinWidth("50%");
         search_field.setClearButtonVisible(true);
 
@@ -64,7 +64,7 @@ public class OCSView extends Div {
             HorizontalLayout cell = new HorizontalLayout();
             cell.add(frontend_data.generate_html_repr());
             return cell;
-        })).setHeader("Suggestions");
+        })).setHeader("Search Matches");
 
         Label inputLabel = new Label("annotation url");
 
@@ -83,7 +83,7 @@ public class OCSView extends Div {
 
 
         VerticalLayout vl = new VerticalLayout(
-                new Label("Paste Databus file identifier of the file you like to annotate"),
+                new Label("Freetext search"),
                 inputs,
                 grids,
                 versionDiv
